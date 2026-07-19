@@ -22,20 +22,20 @@ for d in range(1, int(days_cycle) + 1):
     w = 2 + (target_weight - 2) * (d - 1) / (days_cycle - 1)
     bio = fish_count * w / 1000
     
-    # --- LARASAN KADAR MAKAN (FEED RATE %) IKUT STANDARD AKUAKULTUR SEBENAR ---
+    # --- LARASAN KADAR MAKAN (FEED RATE %) STANDARD INDUSTRI AKUAKULTUR ---
     if d <= 14: 
-        fr = 10.0; typ = "Pre-starter"   # Benih kecil (2g - 35g)
+        fr = 7.0; typ = "Pre-starter"    # Kadar makan benih kecil (2g - 35g)
     elif d <= 30: 
-        fr = 6.0; typ = "Starter"       # Anak ikan (35g - 72g)
+        fr = 5.0; typ = "Starter"        # Kadar makan anak ikan (35g - 72g)
     elif d <= 90: 
-        fr = 3.0 if d > 60 else 4.5; typ = "Grower" # Ikan remaja (72g - 212g)
+        fr = 2.8 if d > 60 else 3.8; typ = "Grower" # Kadar makan ikan remaja
     else: 
-        fr = 1.8 if d <= 120 else 1.1; typ = "Finisher" # Ikan matang (212g - 350g)
+        fr = 1.5 if d <= 120 else 1.0; typ = "Finisher" # Kadar makan ikan matang
         
     feed_day = bio * fr / 100
     cumulative_feed += feed_day
     
-    # Formula FCR yang betul
+    # Formula FCR Akuakultur
     berat_awal_kolam = (fish_count * 2) / 1000
     kenaikan_berat_bersih = bio - berat_awal_kolam
     fcr_hari_ini = cumulative_feed / max(kenaikan_berat_bersih, 0.01)
