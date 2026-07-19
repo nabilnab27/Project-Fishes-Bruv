@@ -6,7 +6,7 @@ import math
 # Set up the web page header & clean layout
 st.set_page_config(page_title="Nabils Fish System", layout="wide", page_icon="🐟")
 
-# CSS UI MODEN: SIDEBAR GELAP & SEMUA TEKS PUTIH
+# CSS UI MODEN: FIX TEXT KOTAK TIPS JADI HITAM, SIDEBAR PUTIH
 st.markdown("""
     <style>
     .stApp { background-color: #FFFFFF !important; }
@@ -58,10 +58,25 @@ st.markdown("""
         font-size: 22px !important;
     }
     
-    /* KOTAK STATUS AIR & TIPS */
+    /* KOTAK STATUS AIR & TIPS (TETAPKAN TEKS HITAM SUPAYA JELAS) */
     .status-box-good { padding: 15px; border-radius: 10px; background-color: #E8F5E9; border: 1px solid #C8E6C9; color: #1B5E20 !important; font-weight: 600; margin-bottom: 15px; }
     .status-box-bad { padding: 15px; border-radius: 10px; background-color: #FFEBEE; border: 1px solid #FFCDD2; color: #B71C1C !important; font-weight: 600; margin-bottom: 15px; }
-    .tips-card { background-color: #F8F9FA; border-left: 5px solid #00B14F; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+    
+    .tips-card { 
+        background-color: #F8F9FA !important; 
+        border-left: 5px solid #00B14F !important; 
+        padding: 15px !important; 
+        border-radius: 8px !important; 
+        margin-bottom: 15px !important; 
+        font-size: 14px !important; 
+        color: #1C1C1E !important;
+        border-top: 1px solid #E5E5EA;
+        border-right: 1px solid #E5E5EA;
+        border-bottom: 1px solid #E5E5EA;
+    }
+    .tips-card b, .tips-card p, .tips-card div {
+        color: #1C1C1E !important;
+    }
     
     /* BUTANG DOWNLOAD */
     .stDownloadButton button {
