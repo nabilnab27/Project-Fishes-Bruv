@@ -33,8 +33,12 @@ for d in range(1, int(days_cycle) + 1):
     feed_day = bio * fr / 100
     cumulative_feed += feed_day
     
-    weight_gain_kg = bio - (fish_count * 2 / 1000)
-    fcr = cumulative_feed / max(weight_gain_kg, 0.1)
+    # Formula FCR Akuakultur yang betul (Dedak Terkumpul / Kenaikan Biomassa)
+berat_awal_kolam = (fish_count * 2) / 1000  # 2 gram tukar ke kg
+kenaikan_berat_bersih = bio - berat_awal_kolam
+
+# Guna max(..., 0.1) supaya tak bahagi dengan kosong pada Hari 1
+fcr = cumulative_feed / max(kenaikan_berat_bersih, 0.1)
     
     data.append({
         "Hari": d,
