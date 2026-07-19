@@ -1,60 +1,19 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import os
-from datetime import datetime
 
 # Set up the web page header
 st.set_page_config(page_title="Tilapia Project Dashboard", layout="wide")
 st.title("🐟 Red Tilapia 1000 Ekor / 150 Hari - eFishery Simulator")
+st.markdown("Sistem simulasi tumbesaran ikan, keperluan dedak harian, dan anggaran FCR berdasarkan fasa ternakan.")
 
-# --- DATA STORAGE SETUP FOR ACTUAL LOGS ---
-LOG_FILE = "log_harian_tilapia.csv"
-
-# Create the CSV file with headers if it doesn't exist yet
-if not os.path.exists(LOG_FILE):
-    df_init = pd.DataFrame(columns=["Tarikh", "Hari Ke-", "Kematian (Ekor)", "pH Air", "Nota"])
-    df_init.to_csv(LOG_FILE, index=False)
-
-# Function to read the latest logs
-def load_logs():
-    return pd.read_csv(LOG_FILE)
-
-# --- 1. SIDEBAR: DATA LOGGING FORM ---
-st.sidebar.header("📝 Borang Catatan Harian Paya")
-with st.sidebar.form(key="log_form", clear_on_submit=True):
-    log_date = st.date_input("Tarikh Ambil Data", value=datetime.today())
-    log_day = st.number_input("Hari Ke- (1-150)", min_value=1, max_value=150, value=1)
-    log_mortality = st.number_input("Kematian Ikan Hari Ini (Ekor)", min_value=0, value=0, step=1)
-    log_ph = st.number_input("Tahap pH Air", min_value=0.0, max_value=14.0, value=7.0, step=0.1)
-    log_notes = st.text_input("Nota / Catatan Tambahan", placeholder="Contoh: Air agak keruh, cuaca hujan")
-    
-    submit_button = st.form_submit_button(label="Simpan Data Paya")
-
-# Logic to append data when clicking submit
-if submit_button:
-    new_data = pd.DataFrame([{
-        "Tarikh": log_date.strftime("%Y-%m-%d"),
-        "Hari Ke-": int(log_day),
-        "Kematian (Ekor)": int(log_mortality),
-        "pH Air": float(log_ph),
-        "Nota": log_notes
-    }])
-    # Append to the CSV file safely
-    new_data.to_csv(LOG_FILE, mode='a', header=False, index=False)
-    st.sidebar.success(f"Data Hari Ke-{log_day} berjaya disimpan!")
-
-# Load fresh logs for the dashboard layout
-df_logs = load_logs()
-
-# --- 2. SIDEBAR INPUT CONTROLS (SIMULATOR PARAMETERS) ---
-st.sidebar.markdown("---")
-st.sidebar.header("🎯 Parameter Projek (Simulasi)")
-fish_count = st.sidebar.number_input("Bilangan Ikan Asal (Ekor)", value=1000, step=100)
+# 1. SIDEBAR INPUT CONTROLS
+st.sidebar.header("🎯 Parameter Projek (Boleh Ubah)")
+fish_count = st.sidebar.number_input("Bilangan Ikan (Ekor)", value=1000, step=100)
 target_weight = st.sidebar.number_input("Target Berat Matang (gram)", value=350, step=10)
 days_cycle = st.sidebar.number_input("Tempoh Ternakan (Hari)", value=150, step=5)
 
-# --- 3. CALCULATION ENGINE (SIMULATION MAP) ---
+# 2. CALCULATION ENGINE
 data = []
 cumulative_feed = 0
 
@@ -62,63 +21,66 @@ for d in range(1, int(days_cycle) + 1):
     w = 2 + (target_weight - 2) * (d - 1) / (days_cycle - 1)
     bio = fish_count * w / 1000
     
-    if d <= 14: fr = 15.0; typ = "Pre-starter"
-    elif d <= 30: fr = 10.0; typ = "Starter"
-    elif d <= 90: fr = 4.0 if d > 60 else 6.0; typ = "Grower"
-    else: fr = 2.5 if d <= 120 else 1.2; typ = "Finisher"
+    if d <= 14: 
+        fr = 15.0; typ = "Pre-starter"
+    elif d <= 30: 
+        fr = 10.0; typ = "Starter"
+    elif d <= 90: 
+        fr = 4.0 if d > 60 else 6.0; typ = "Grower"
+    else: 
+        fr = 2.5 if d <= 120 else 1.2; typ = "Finisher"
         
     feed_day = bio * fr / 100
     cumulative_feed += feed_day
+    
     weight_gain_kg = bio - (fish_count * 2 / 1000)
     fcr = cumulative_feed / max(weight_gain_kg, 0.1)
     
     data.append({
-        "Hari": d, "Berat (g)": round(w, 1), "Biomassa (kg)": round(bio, 1),
-        "Feed Rate (%)": fr, "Dedak Harian (kg)": round(feed_day, 2),
-        "Jenis Dedak": typ, "Projeksi FCR": round(fcr, 2)
+        "Hari": d,
+        "Berat (g)": round(w, 1),
+        "Biomassa (kg)": round(bio, 1),
+        "Feed Rate (%)": fr,
+        "Dedak Harian (kg)": round(feed_day, 2),
+        "Jenis Dedak": typ,
+        "Projeksi FCR": round(fcr, 2)
     })
-df_sim = pd.DataFrame(data)
 
-# --- 4. TOP SUMMARY METRICS ---
-st.subheader("📊 Status Semasa & Simulasi")
+df = pd.DataFrame(data)
+
+# 3. TOP SUMMARY METRICS
+st.subheader("📊 Rumusan Projek Baharu")
 col1, col2, col3, col4 = st.columns(4)
-
-total_dead = df_logs["Kematian (Ekor)"].sum() if not df_logs.empty else 0
-latest_ph = df_logs["pH Air"].iloc[-1] if not df_logs.empty else "Tiada Data"
-
 with col1:
-    st.metric("Jumlah Kematian Terkumpul", f"{total_dead} Ekor", delta=f"-{total_dead}" if total_dead > 0 else None, delta_color="inverse")
+    st.metric("Jumlah Dedak Diperlukan", f"{round(cumulative_feed, 1)} kg")
 with col2:
-    st.metric("Bacaan pH Air Terkini", f"{latest_ph}")
+    st.metric("Anggaran FCR Akhir", f"{df['Projeksi FCR'].iloc[-1]}")
 with col3:
-    st.metric("Jumlah Dedak Diperlukan (Simulasi)", f"{round(cumulative_feed, 1)} kg")
+    st.metric("Jumlah Biomassa Menuai", f"{df['Biomassa (kg)'].iloc[-1]} kg")
 with col4:
-    st.metric("Anggaran FCR Akhir", f"{df_sim['Projeksi FCR'].iloc[-1]}")
+    st.metric("Fasa Dedak Terlibat", f"{df['Jenis Dedak'].nunique()} Jenis")
 
 st.markdown("---")
 
-# --- 5. VISUALIZING ACTUAL LOGS VS SIMULATION ---
-tab1, tab2 = st.tabs(["📝 Rekod Data Sebenar Paya", "📈 Pelan Jadual Simulasi Asal"])
+# 4. INTERACTIVE VISUALIZATIONS
+st.subheader("📈 Graf Keperluan Dedak Harian vs Pertumbuhan Ikan")
+chart_data = df.set_index("Hari")[["Berat (g)", "Dedak Harian (kg)"]]
+st.line_chart(chart_data)
 
-with tab1:
-    st.subheader("📋 Buku Log Harian Anda")
-    if df_logs.empty:
-        st.info("Buku log masih kosong. Sila isi borang di sebelah kiri untuk memasukkan data harian pertama anda.")
-    else:
-        # Visualizing pH over time
-        st.markdown("**Trend pH Air Semasa** (Julat Optimum Tilapia Red: 6.5 - 8.5)")
-        chart_df = df_logs.set_index("Hari Ke-")[["pH Air"]]
-        st.line_chart(chart_df)
-        
-        # Displaying historical data table
-        st.dataframe(df_logs, use_container_width=True, hide_index=True)
-        
-        # Simple download option for your gathered actual records
-        csv_logs = df_logs.to_csv(index=False).encode('utf-8')
-        st.download_button("Muat Turun Data Log Sebenar (.CSV)", data=csv_logs, file_name="Data_Sebenar_Tilapia.csv", mime="text/csv")
+# 5. LIVE DATA TABLE 
+st.subheader("📋 Pelan Harian Lengkap (150 Hari)")
+st.dataframe(df, use_container_width=True, hide_index=True)
 
-with tab2:
-    st.subheader("📈 Graf Keperluan Dedak Harian vs Pertumbuhan Ikan")
-    chart_data = df_sim.set_index("Hari")[["Berat (g)", "Dedak Harian (kg)"]]
-    st.line_chart(chart_data)
-    st.dataframe(df_sim, use_container_width=True, hide_index=True)
+# 6. EXCEL DOWNLOAD BUTTON FOR EXPORTING
+st.subheader("💾 Eksport Kembali")
+@st.cache_data
+def convert_df_to_csv(dataframe):
+    return dataframe.to_csv(index=False).encode('utf-8')
+
+csv_data = convert_df_to_csv(df)
+st.download_button(
+    label="Muat Turun Pelan Harian (CSV)",
+    data=csv_data,
+    file_name="Pelan_Harian_Tilapia.csv",
+    mime="text/csv"
+)
