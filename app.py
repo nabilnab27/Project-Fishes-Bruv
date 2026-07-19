@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 # Set up the web page header & premium layout
-st.set_page_config(page_title="eFishery Smart Tilapia ERP", layout="wide", page_icon="🐟")
+st.set_page_config(page_title="Nabils Fish System", layout="wide", page_icon="🐟")
 
 # CUSTOM CSS FOR PREMIUM LOOK
 st.markdown("""
@@ -22,7 +22,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("✨ 🐟 eFishery Smart Tilapia Smart Dashboard v2.5 ✨")
+# NAMA TAJUK BARU BARU: NABILS FISH SYSTEM
+st.title("✨ 🐟 Nabils Fish System v2.5 ✨")
 st.markdown("### *Sistem Pengurusan Pintar Akuakultur & Unjuran Kewangan Ladang Komersial*")
 st.markdown("---")
 
@@ -188,7 +189,6 @@ bags_fin = math.ceil(feed_finisher / 20)
 total_feed_cost = (bags_pre * price_pre) + (bags_star * price_star) + (bags_grow * price_grow) + (bags_fin * price_fin)
 total_seed_cost = fish_count_input * seed_price_input
 
-# NEW GLOBAL TOTAL COST CALCULATION (Termasuk kos operasi tambahan)
 grand_total_cost = total_feed_cost + total_seed_cost + total_additional_cost
 
 final_biomass = df["Biomassa Total (kg)"].iloc[-1]
@@ -273,7 +273,7 @@ def convert_df_to_csv(dataframe):
 
 csv_data = convert_df_to_csv(df)
 st.download_button(
-    label="Muat Turun Pelan Harian Komprehensif (CSV)",
+    label="Muat Tunun Pelan Harian Komprehensif (CSV)",
     data=csv_data,
     file_name="Pelan_Operasi_Tilapia_Lengkap.csv",
     mime="text/csv"
