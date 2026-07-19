@@ -125,7 +125,6 @@ days_cycle = st.sidebar.number_input("Kitaran Ternakan (Hari)", value=150, step=
 st.sidebar.markdown("### 🛡️ Pengurusan Risiko")
 survival_rate = st.sidebar.slider("Kadar Kelangsungan Hidup / SR (%)", min_value=50, max_value=100, value=85, step=5)
 
-# DIKEMAS KINI: INPUT KOS BEG DENGAN PERATUSAN PROTEIN & NOTA FCR
 st.sidebar.markdown("### 💵 Kos & Formulasi Dedak (20kg/Beg)")
 price_pre = st.sidebar.number_input("Pre-starter (Protein: >32% | Crumble)", value=90.0, step=5.0)
 price_star = st.sidebar.number_input("Starter (Protein: 30% - 32% | 1mm-2mm)", value=71.0, step=5.0)
@@ -141,21 +140,22 @@ st.markdown("<p style='font-size:13px; color:#64748B; margin-top:-10px;'>Masukka
 
 if 'additional_costs' not in st.session_state:
     st.session_state.additional_costs = pd.DataFrame([
-        {"Komponen Perbelanjaan": "Kos Elektrik Blower HG-370", "Amaun Keseluruhan (RM)": 150.00},
-        {"Komponen Perbelanjaan": "Rawatan Air & Profilaksis (Garam/Kapur)", "Amaun Keseluruhan (RM)": 50.00}
+        {"Komponen Perbelanjaan": "Kos Elektrik Blower HG-370", "Kos Penyelenggaraan (RM)": 150.00},
+        {"Komponen Perbelanjaan": "Rawatan Air & Profilaksis (Garam/Kapur)", "Kos Penyelenggaraan (RM)": 50.00}
     ])
 
+# DAH FIXED: Key untuk nama kolum diselaraskan sepenuhnya
 edited_costs_df = st.data_editor(
     st.session_state.additional_costs,
     num_rows="dynamic",
     use_container_width=True,
     column_config={
         "Komponen Perbelanjaan": st.column_config.TextColumn("Deskripsi Perbelanjaan"),
-        "Amaun Keseluruhan (RM)": st.column_config.NumberColumn("Kos Penyelenggaraan (RM)", format="RM %.2f", min_value=0.0)
+        "Kos Penyelenggaraan (RM)": st.column_config.NumberColumn("Kos Penyelenggaraan (RM)", format="RM %.2f", min_value=0.0)
     }
 )
 st.session_state.additional_costs = edited_costs_df
-total_additional_cost = edited_costs_df["Amaun Keseluruhan (RM)"].sum()
+total_additional_cost = edited_costs_df["Kos Penyelenggaraan (RM)"].sum()
 
 # 2. CALCULATION ENGINE
 data = []
@@ -275,7 +275,7 @@ with g_col2:
 
 st.markdown("<hr style='border-color:#E2E8F0;'/>", unsafe_allow_html=True)
 
-# 5. DIKEMAS KINI: LOGISTICS, PROTEIN % AND FCR ADVANTAGE SPECIFICATION
+# 5. LOGISTICS, PROTEIN % AND FCR ADVANTAGE SPECIFICATION
 st.markdown("### 📦 Spesifikasi Logistik Pembelian Makanan & Kelebihan Nutrisi")
 st.markdown("<p style='font-size:13px; color:#64748B; margin-top:-10px;'>Pecahan jumlah beg (20kg/beg) beserta data peratus protein makro untuk kawalan FCR yang optimum.</p>", unsafe_allow_html=True)
 
