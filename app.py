@@ -6,35 +6,58 @@ import math
 # Set up the web page header & mature enterprise layout
 st.set_page_config(page_title="Nabils Fish System", layout="wide", page_icon="📈")
 
-# PROFESSIONAL CUSTOM CSS (Clean corporate style, soft shadows, matured typography)
+# CSS UNTUK BORDER JELAS, KONTRAST TINGGI & ELEGAN
 st.markdown("""
     <style>
-    /* Global modifications */
+    /* Global Background & Typography */
     .reportview-container {
-        background: #FAFAFA;
-    }
-    h1, h2, h3 {
-        color: #1E293B !important;
-        font-family: 'Inter', sans-serif;
+        background: #F8FAFC;
     }
     
-    /* Metric Cards Styling */
+    /* Nama Sistem & Header Kontras Tinggi */
+    h1 {
+        color: #0F172A !important;
+        font-family: 'Inter', 'Helvetica Neue', sans-serif;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px;
+    }
+    h2, h3, h5 {
+        color: #1E293B !important;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700 !important;
+    }
+    
+    /* Kotak Input Sidebar */
+    div[data-testid="stSidebar"] label {
+        color: #0F172A !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stNumberInput"] input {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #1E40AF !important;
+        border-radius: 6px;
+    }
+    
+    /* Metric Cards Styling dengan Border Pekat */
     div[data-testid="stMetric"] {
         background-color: #FFFFFF;
         padding: 20px 25px;
         border-radius: 8px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 2px solid #94A3B8;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
     div[data-testid="stMetricValue"] {
-        font-size: 26px !important;
-        font-weight: 600 !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
         color: #0F172A !important;
     }
     div[data-testid="stMetricLabel"] {
-        font-size: 14px !important;
-        font-weight: 500 !important;
-        color: #64748B !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #475569 !important;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
@@ -44,35 +67,47 @@ st.markdown("""
         padding: 18px;
         border-radius: 8px;
         margin-bottom: 15px;
-        border-left: 4px solid #3B82F6;
-        background-color: #F8FAFC;
-        color: #334155;
+        border-left: 5px solid #2563EB;
+        border-top: 1px solid #CBD5E1;
+        border-right: 1px solid #CBD5E1;
+        border-bottom: 1px solid #CBD5E1;
+        background-color: #EFF6FF;
+        color: #1E3A8A;
+        font-weight: 500;
     }
     .pro-box-alert {
         padding: 18px;
         border-radius: 8px;
         margin-bottom: 15px;
-        border-left: 4px solid #EF4444;
+        border-left: 5px solid #DC2626;
+        border-top: 1px solid #FCA5A5;
+        border-right: 1px solid #FCA5A5;
+        border-bottom: 1px solid #FCA5A5;
         background-color: #FEF2F2;
         color: #991B1B;
+        font-weight: 500;
     }
     .pro-box-success {
         padding: 18px;
         border-radius: 8px;
         margin-bottom: 15px;
-        border-left: 4px solid #10B981;
-        background-color: #ECFDF5;
-        color: #065F46;
+        border-left: 5px solid #16A34A;
+        border-top: 1px solid #86EFAC;
+        border-right: 1px solid #86EFAC;
+        border-bottom: 1px solid #86EFAC;
+        background-color: #F0FDF4;
+        color: #14532D;
+        font-weight: 500;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # HEADER SECTION
-st.title("Nabils Fish System")
-st.markdown("##### *Sistem Analisis Akuakultur Kuantitatif & Unjuran Data Perbelanjaan Ladang*")
-st.markdown("<hr style='margin-top:0px; margin-bottom:25px; border-color:#E2E8F0;'/>", unsafe_allow_html=True)
+st.markdown("<h1>Nabils Fish System</h1>", unsafe_allow_html=True)
+st.markdown("<p style='font-size:16px; font-weight:600; color:#475569; margin-top:-10px;'><i>Sistem Analisis Akuakultur Kuantitatif & Unjuran Data Perbelanjaan Ladang</i></p>", unsafe_allow_html=True)
+st.markdown("<hr style='margin-top:5px; margin-bottom:25px; border-color:#94A3B8; border-width: 2px;'/>", unsafe_allow_html=True)
 
-# Data mapping untuk saiz inci -> berat (g) dan harga anggaran pasaran (RM)
+# Data mapping
 size_options = {
     "1.5 Inci": {"weight": 1.2, "price": 0.18},
     "2.0 Inci": {"weight": 2.5, "price": 0.25},
@@ -87,22 +122,22 @@ size_options = {
 pond_options = {
     "Kolam Simen (Sistem Aliran / Air Bukit)": {
         "fcr_mod": 0.05, 
-        "tips": "Fasa operasional kolam simen memerlukan penyingkiran pepejal terampai (najis ikan) secara berkala menerusi sistem central drain atau sifon mingguan bagi mengelakkan lonjakan gas amonia.",
+        "tips": "Fasa operasional kolam simen memerlukan penyingkiran pepejal terampai (najis ikan) secara berkala menerusi sistem central drain atau sifon mingguan.",
         "aerator_rec": "Ring Blower (cth: 370W) dipadankan bersama Aero-Tube/Uniring untuk pemampatan pembebasan micro-bubbles."
     },
     "Kolam Tanah Tradisional": {
         "fcr_mod": -0.10, 
-        "tips": "Kehadiran organisma mikro (plankton) mengurangkan kebergantungan penuh pada palet komersial. Pemantauan nilai pH tanah dasar menggunakan kalsium karbonat (Dolomite) adalah kritikal.",
+        "tips": "Kehadiran organisma mikro (plankton) mengurangkan kebergantungan penuh pada palet komersial.",
         "aerator_rec": "Sistem Kincir Air (Paddle Wheel) disyorkan bagi mengoptimumkan sirkulasi perimeter air yang luas."
     },
     "Kolam Kanvas / Tangki HDPE": {
         "fcr_mod": 0.00, 
-        "tips": "Memudahkan kawalan biosekuriti dan proses penggredan saiz (grading). Pastikan struktur kerangka kolam diperiksa secara berkala bagi mengelakkan risiko kebocoran struktur.",
-        "aerator_rec": "Aparatus pengudaraan berterusan (Root/Ring Blower) dengan integrasi sistem bekalan kuasa bantuan (UPS/Generator)."
+        "tips": "Memudahkan kawalan biosekuriti dan proses penggredan saiz (grading).",
+        "aerator_rec": "Aparatus pengudaraan berterusan (Root/Ring Blower) dengan integrasi sistem bekalan kuasa bantuan."
     },
     "Sistem Biofloc": {
         "fcr_mod": -0.20, 
-        "tips": "Kitaran penukaran nitrogen memerlukan pengawasan nisbah Karbon:Nitrogen (C:N ratio) yang ketat melalui aplikasi sumber karbon (molases).",
+        "tips": "Kitaran penukaran nitrogen memerlukan pengawasan nisbah Karbon:Nitrogen (C:N ratio) yang ketat.",
         "aerator_rec": "Oksigen Terlarut (DO) mestilah dikekalkan secara konsisten pada paras > 5.0 mg/L."
     }
 }
@@ -125,18 +160,31 @@ days_cycle = st.sidebar.number_input("Kitaran Ternakan (Hari)", value=150, step=
 st.sidebar.markdown("### 🛡️ Pengurusan Risiko")
 survival_rate = st.sidebar.slider("Kadar Kelangsungan Hidup / SR (%)", min_value=50, max_value=100, value=85, step=5)
 
-st.sidebar.markdown("### 💵 Kos & Formulasi Dedak (20kg/Beg)")
-price_pre = st.sidebar.number_input("Pre-starter (Protein: >32% | Crumble)", value=90.0, step=5.0)
-price_star = st.sidebar.number_input("Starter (Protein: 30% - 32% | 1mm-2mm)", value=71.0, step=5.0)
-price_grow = st.sidebar.number_input("Grower (Protein: 28% - 30% | 2mm-3mm)", value=70.0, step=5.0)
-price_fin = st.sidebar.number_input("Finisher (Protein: 26% - 28% | 3mm-4mm)", value=70.0, step=5.0)
+# BOLD & EDITABLE: INPUT KOS & PERATUS PROTEIN DEDAK
+st.sidebar.markdown("### 💵 Kos & Kandungan Protein Dedak")
+
+st.sidebar.markdown("**— Pre-starter —**")
+price_pre = st.sidebar.number_input("Harga Pre-starter (RM/Beg)", value=90.0, step=5.0)
+prot_pre = st.sidebar.number_input("Protein Pre-starter (%)", value=32.0, step=1.0)
+
+st.sidebar.markdown("**— Starter —**")
+price_star = st.sidebar.number_input("Harga Starter (RM/Beg)", value=71.0, step=5.0)
+prot_star = st.sidebar.number_input("Protein Starter (%)", value=31.0, step=1.0)
+
+st.sidebar.markdown("**— Grower —**")
+price_grow = st.sidebar.number_input("Harga Grower (RM/Beg)", value=70.0, step=5.0)
+prot_grow = st.sidebar.number_input("Protein Grower (%)", value=29.0, step=1.0)
+
+st.sidebar.markdown("**— Finisher —**")
+price_fin = st.sidebar.number_input("Harga Finisher (RM/Beg)", value=70.0, step=5.0)
+prot_fin = st.sidebar.number_input("Protein Finisher (%)", value=27.0, step=1.0)
 
 st.sidebar.markdown("### 🏪 Unjuran Nilai Jualan")
 selling_price_per_kg = st.sidebar.number_input("Harga Jualan Pasaran (RM/KG)", value=14.0, step=0.5)
 
 # INTERACTIVE ADDITIONAL COSTS
 st.markdown("### ⚡ Kos Operasi Tambahan (Penyelenggaraan & Utiliti)")
-st.markdown("<p style='font-size:13px; color:#64748B; margin-top:-10px;'>Masukkan pembolehubah kos luar seperti bil elektrik aerator, rawatan ubat-ubatan, atau kos logistik am.</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size:14px; font-weight: 500; color:#475569; margin-top:-10px;'>Masukkan pembolehubah kos luar seperti bil elektrik aerator, rawatan ubat-ubatan, atau kos logistik am.</p>", unsafe_allow_html=True)
 
 if 'additional_costs' not in st.session_state:
     st.session_state.additional_costs = pd.DataFrame([
@@ -144,7 +192,6 @@ if 'additional_costs' not in st.session_state:
         {"Komponen Perbelanjaan": "Rawatan Air & Profilaksis (Garam/Kapur)", "Kos Penyelenggaraan (RM)": 50.00}
     ])
 
-# DAH FIXED: Key untuk nama kolum diselaraskan sepenuhnya
 edited_costs_df = st.data_editor(
     st.session_state.additional_costs,
     num_rows="dynamic",
@@ -259,58 +306,63 @@ elif 1.3 <= final_fcr <= 1.5:
 else:
     st.markdown(f"<div class='pro-box-alert'><b>ANALISIS STATUS FCR ({final_fcr}): PRESTASI KRITIKAL</b><br/>Indikasi kebocoran kos makanan dikesan. Sila nilai semula ketumpatan biomas, pemecahan sistem pengudaraan udara malam, atau kestabilan terma kolam.</div>", unsafe_allow_html=True)
 
-st.markdown("<hr style='border-color:#E2E8F0;'/>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#CBD5E1; border-width: 2px;'/>", unsafe_allow_html=True)
 
 # 4. DATA VISUALIZATION
-st.markdown("### 📈 Visualisasi Data Projeksi")
+st.markdown("### 📈 Visualisasi Data Projeksi (Boleh di-zoom & Hover)")
 g_col1, g_col2 = st.columns(2)
+
 with g_col1:
-    st.markdown("<p style='font-size:14px; font-weight:600; color:#334155;'>Korelasi Purata Berat Per Ekor (g) vs Keperluan Dedak Harian (kg)</p>", unsafe_allow_html=True)
+    st.markdown("<div style='border: 2px solid #CBD5E1; padding: 15px; border-radius: 8px; background-color: #FFFFFF;'>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:15px; font-weight:700; color:#0F172A; margin-top:0px;'>Korelasi Purata Berat Per Ekor (g) vs Keperluan Dedak Harian (kg)</p>", unsafe_allow_html=True)
     chart_data1 = df.set_index("Hari")[["Purata Berat (g)", "Dedak Harian (kg)"]]
-    st.area_chart(chart_data1)
+    st.area_chart(chart_data1, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 with g_col2:
-    st.markdown("<p style='font-size:14px; font-weight:600; color:#334155;'>Trend Akumulasi Biomassa (kg) menentang Unjuran FCR Semasa</p>", unsafe_allow_html=True)
+    st.markdown("<div style='border: 2px solid #CBD5E1; padding: 15px; border-radius: 8px; background-color: #FFFFFF;'>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:15px; font-weight:700; color:#0F172A; margin-top:0px;'>Trend Akumulasi Biomassa (kg) menentang Unjuran FCR Semasa</p>", unsafe_allow_html=True)
     chart_data2 = df.set_index("Hari")[["Biomassa (kg)", "Nilai FCR Semasa"]]
-    st.line_chart(chart_data2)
+    st.line_chart(chart_data2, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown("<hr style='border-color:#E2E8F0;'/>", unsafe_allow_html=True)
+st.markdown("<br/><hr style='border-color:#CBD5E1; border-width: 2px;'/>", unsafe_allow_html=True)
 
-# 5. LOGISTICS, PROTEIN % AND FCR ADVANTAGE SPECIFICATION
+# 5. DYNAMIC LOGISTICS & PROTEIN % MATCHING
 st.markdown("### 📦 Spesifikasi Logistik Pembelian Makanan & Kelebihan Nutrisi")
-st.markdown("<p style='font-size:13px; color:#64748B; margin-top:-10px;'>Pecahan jumlah beg (20kg/beg) beserta data peratus protein makro untuk kawalan FCR yang optimum.</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size:14px; font-weight: 500; color:#475569; margin-top:-10px;'>Pecahan jumlah beg (20kg/beg) beserta data peratus protein makro untuk kawalan FCR yang optimum.</p>", unsafe_allow_html=True)
 
 b_col1, b_col2, b_col3, b_col4 = st.columns(4)
 with b_col1:
-    st.metric("Pre-starter (>32% Protein)", f"{bags_pre} Beg", f"Kos: RM {bags_pre * price_pre:.2f}", delta_color="off")
-    st.markdown("<p style='font-size:12px; color:#475569;'><b>Kelebihan FCR:</b> Kadar asimilasi tinggi untuk benih kecil. Protein tinggi memecah sekatan tumbesaran awal (stunting) dan membina imuniti organ dalaman.</p>", unsafe_allow_html=True)
+    st.metric(f"Pre-starter ({prot_pre:.1f}% Protein)", f"{bags_pre} Beg", f"Kos: RM {bags_pre * price_pre:.2f}", delta_color="off")
+    st.markdown("<p style='font-size:13px; color:#1E293B; font-weight:500; line-height:1.4;'><b>Kelebihan FCR:</b> Kadar asimilasi tinggi untuk benih kecil. Protein tinggi memecah sekatan tumbesaran awal (stunting) dan membina imuniti organ dalaman.</p>", unsafe_allow_html=True)
 
 with b_col2:
-    st.metric("Starter (30% - 32% Protein)", f"{bags_star} Beg", f"Kos: RM {bags_star * price_star:.2f}", delta_color="off")
-    st.markdown("<p style='font-size:12px; color:#475569;'><b>Kelebihan FCR:</b> Nisbah asid amino seimbang untuk fasa pembentukan struktur tulang rangka utama ikan. Memastikan pertambahan panjang badan yang seragam.</p>", unsafe_allow_html=True)
+    st.metric(f"Starter ({prot_star:.1f}% Protein)", f"{bags_star} Beg", f"Kos: RM {bags_star * price_star:.2f}", delta_color="off")
+    st.markdown("<p style='font-size:13px; color:#1E293B; font-weight:500; line-height:1.4;'><b>Kelebihan FCR:</b> Nisbah asid amino seimbang untuk fasa pembentukan struktur tulang rangka utama ikan. Memastikan pertambahan panjang badan yang seragam.</p>", unsafe_allow_html=True)
 
 with b_col3:
-    st.metric("Grower (28% - 30% Protein)", f"{bags_grow} Beg", f"Kos: RM {bags_grow * price_grow:.2f}", delta_color="off")
-    st.markdown("<p style='font-size:12px; color:#475569;'><b>Kelebihan FCR:</b> Mengoptimumkan pembentukan tisu otot daging tebal. Tahap protein dilaraskan supaya ikan tidak membuang sisa nitrogen berlebihan ke dalam air kolam.</p>", unsafe_allow_html=True)
+    st.metric(f"Grower ({prot_grow:.1f}% Protein)", f"{bags_grow} Beg", f"Kos: RM {bags_grow * price_grow:.2f}", delta_color="off")
+    st.markdown("<p style='font-size:13px; color:#1E293B; font-weight:500; line-height:1.4;'><b>Kelebihan FCR:</b> Mengoptimumkan pembentukan tisu otot daging tebal. Tahap protein dilaraskan supaya ikan tidak membuang sisa nitrogen berlebihan ke dalam air kolam.</p>", unsafe_allow_html=True)
 
 with b_col4:
-    st.metric("Finisher (26% - 28% Protein)", f"{bags_fin} Beg", f"Kos: RM {bags_fin * price_fin:.2f}", delta_color="off")
-    st.markdown("<p style='font-size:12px; color:#475569;'><b>Kelebihan FCR:</b> Mengekalkan berat badan sasaran komersial tanpa pengumpulan lemak (fatty liver). Membantu mengekalkan tekstur daging yang pejal sebelum tuaian.</p>", unsafe_allow_html=True)
+    st.metric(f"Finisher ({prot_fin:.1f}% Protein)", f"{bags_fin} Beg", f"Kos: RM {bags_fin * price_fin:.2f}", delta_color="off")
+    st.markdown("<p style='font-size:13px; color:#1E293B; font-weight:500; line-height:1.4;'><b>Kelebihan FCR:</b> Mengekalkan berat badan sasaran komersial tanpa pengumpulan lemak (fatty liver). Membantu mengekalkan tekstur daging yang pejal sebelum tuaian.</p>", unsafe_allow_html=True)
 
-st.markdown("<hr style='border-color:#E2E8F0;'/>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#CBD5E1; border-width: 2px;'/>", unsafe_allow_html=True)
 
 # 6. HUB ILMU & PETUA TEKNIKAL
 st.markdown("### 📚 Pangkalan Pengetahuan & Pengurusan Risiko")
 with st.expander("🔬 Analisis Parameter Saintifik & Biologi"):
     st.markdown("""
-    * **Metabolisme Terma:** Kitaran biologi Tilapia Merah (*Oreochromis niloticus*) beroperasi secara optimum pada julat suhu **28°C - 32°C**. Penurunan suhu di bawah julat ini (biasa berlaku pada input air bukit) merencat kecekapan enzim pencernaan.
-    * **Mekanisme Larutan Oksigen:** Pemindahan gas oksigen ke dalam cecair bergantung penuh pada nisbah luas permukaan buih. Pemasangan sistem pemampatan *micro-bubbles* meningkatkan kadar *Dissolved Oxygen* (DO) jauh lebih efektif berbanding buih kasar.
+    * **Metabolisme Terma:** Kitaran biologi Tilapia Merah beroperasi secara optimum pada julat suhu **28°C - 32°C**. Penukuran suhu bawah julat ini merencat enzim pencernaan.
+    * **Mekanisme Larutan Oksigen:** Pemasangan sistem pemampatan *micro-bubbles* meningkatkan kadar *Dissolved Oxygen* (DO) jauh lebih efektif berbanding buih kasar.
     """)
 
 with st.expander("💡 Garis Panduan Praktikal & Operasi Lapangan"):
     st.markdown("""
-    * **Kitaran Hidraulik Air Bukit:** Elakkan kemasukan air bukit berterusan jika ia menjejaskan suhu terma air kolam simen. Pertimbangkan kaedah curahan bertingkat (aeration cascade) untuk meningkatkan DO pra-kemasukan.
-    * **Metodologi Pemakanan Satiation:** Pemberian palet harus dihentikan serta-merta apabila tindak balas suapan ikan menurun melebihi 5 minit bagi mengelakkan pembaziran sisa nitrogen organik di dasar.
-    * **Manajemen Mendapan Pepejal:** Kolam struktur simen tidak mempunyai agen biologi tanah untuk mendegradasi sisa pepejal. Pelaksanaan proses sifon dasar secara berkala amat kritikal untuk menstabilkan kualiti air.
+    * **Kitaran Hidraulik Air Bukit:** Elakkan kemasukan air bukit berterusan jika ia menjejaskan suhu terma air kolam simen.
+    * **Metodologi Pemakanan Satiation:** Pemberian palet harus dihentikan serta-merta apabila tindak balas suapan ikan menurun melebihi 5 minit.
     """)
 
 with st.expander(f"⚙️ Spesifikasi Teknikal Infrastruktur: {selected_pond}"):
@@ -318,10 +370,10 @@ with st.expander(f"⚙️ Spesifikasi Teknikal Infrastruktur: {selected_pond}"):
     p_col1.info(f"**Pengurusan Sisa:**\n\n{pond_options[selected_pond]['tips']}")
     p_col2.warning(f"**Konfigurasi Pengudaraan:**\n\n{pond_options[selected_pond]['aerator_rec']}")
 
-st.markdown("<hr style='border-color:#E2E8F0;'/>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#CBD5E1; border-width: 2px;'/>", unsafe_allow_html=True)
 
-# 7. LOG TABLE AND EXPORT
-st.markdown("### 📋 Jadual Matriks Operasi Harian")
+# 7. JADUAL MATRIKS OPERASI
+st.markdown("### 📋 Jadual Matriks Operasi Harian (Boleh Cari & Susun)")
 st.dataframe(df, use_container_width=True, hide_index=True)
 
 st.markdown("<br/>", unsafe_allow_html=True)
