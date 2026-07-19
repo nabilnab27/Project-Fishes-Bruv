@@ -18,28 +18,26 @@ data = []
 cumulative_feed = 0
 
 for d in range(1, int(days_cycle) + 1):
-    # Linear growth math based on your openpyxl logic
+    # Linear growth math
     w = 2 + (target_weight - 2) * (d - 1) / (days_cycle - 1)
     bio = fish_count * w / 1000
     
-    # Feeding Rate % and Type allocation based on days
+    # --- LARASAN KADAR MAKAN (FEED RATE %) IKUT STANDARD AKUAKULTUR SEBENAR ---
     if d <= 14: 
-        fr = 15.0; typ = "Pre-starter"
+        fr = 10.0; typ = "Pre-starter"   # Benih kecil (2g - 35g)
     elif d <= 30: 
-        fr = 10.0; typ = "Starter"
+        fr = 6.0; typ = "Starter"       # Anak ikan (35g - 72g)
     elif d <= 90: 
-        fr = 4.0 if d > 60 else 6.0; typ = "Grower"
+        fr = 3.0 if d > 60 else 4.5; typ = "Grower" # Ikan remaja (72g - 212g)
     else: 
-        fr = 2.5 if d <= 120 else 1.2; typ = "Finisher"
+        fr = 1.8 if d <= 120 else 1.1; typ = "Finisher" # Ikan matang (212g - 350g)
         
     feed_day = bio * fr / 100
     cumulative_feed += feed_day
     
-    # --- FORMULA FCR YANG DAH DIPATUHKAN (BETUL) ---
-    berat_awal_kolam = (fish_count * 2) / 1000  # Benih 2 gram tukar ke kg
+    # Formula FCR yang betul
+    berat_awal_kolam = (fish_count * 2) / 1000
     kenaikan_berat_bersih = bio - berat_awal_kolam
-    
-    # Guna max(..., 0.01) supaya hari pertama tidak ralat (division by zero)
     fcr_hari_ini = cumulative_feed / max(kenaikan_berat_bersih, 0.01)
     
     data.append({
@@ -60,7 +58,6 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric("Jumlah Dedak Diperlukan", f"{round(cumulative_feed, 1)} kg")
 with col2:
-    # Mengambil nilai FCR pada hari terakhir projek
     st.metric("Anggaran FCR Akhir", f"{df['Projeksi FCR'].iloc[-1]}")
 with col3:
     st.metric("Jumlah Biomassa Menuai", f"{df['Biomassa (kg)'].iloc[-1]} kg")
@@ -71,8 +68,6 @@ st.markdown("---")
 
 # 4. INTERACTIVE VISUALIZATIONS
 st.subheader("📈 Graf Keperluan Dedak Harian vs Pertumbuhan Ikan")
-
-# Structuring chart data cleanly
 chart_data = df.set_index("Hari")[["Berat (g)", "Dedak Harian (kg)"]]
 st.line_chart(chart_data)
 
